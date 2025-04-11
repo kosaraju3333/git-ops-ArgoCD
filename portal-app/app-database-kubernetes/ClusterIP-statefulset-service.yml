@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: portal-database-statefulset-service
+  namespace: portal-database
+spec:
+  selector:
+    app: portal-database-statefulset
+  ports:
+    - protocol: TCP
+      # Below Port number is a service port number
+      port: 5432
+      # Below targetPort is a Container Port number
+      targetPort: 5432

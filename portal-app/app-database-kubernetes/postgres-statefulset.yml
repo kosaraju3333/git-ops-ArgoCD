@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: portal-database-statefulset
+  namespace: portal-database
+  labels:
+    app: portal-database-statefulset
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portal-database-statefulset
+  template:
+    metadata:
+      name: portal-database-statefulset-app
+      labels:
+        app: portal-database-statefulset
+    spec:
+      containers:
+      - name: portal-database-statefulset-container
+        image: kosaraju333/portal-application-database:V1
+          #imagePullPolicy: "IfNotPresent"
+          #image: postgres:latest
+        livenessProbe:
+          exec:
+            command:
+              - pg_isready
+              - -d 
+              - 'user=postgres dbname=spontan host=localhost port=5432'
+          initialDelaySeconds: 10  ## Liveness probe executed after 10 or N seconds dealy after apllication set up
+          periodSeconds: 10 ## Liveness probe is executed for every 10 or N seconds
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 2 ## Number of Liveness probe failures, container restarts after failureThreshold is 2 or N
+
+        env:
+        - name: PGDATA
+          value: "/var/lib/postgresql/data/pgdata"
+
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: portal-database-secrets
+              key: user
+
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: portal-database-secrets
+              key: password
+
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: portal-database-secrets
+              key: database
+
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: postgres-db
+
+        ports:
+        - containerPort: 5432
+
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-db
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "postgres-ebs-sc"
+      resources:
+        requests:
+          storage: 1Gi
