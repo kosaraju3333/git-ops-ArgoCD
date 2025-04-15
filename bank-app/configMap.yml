@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bank-app-configmap
+  namespace: bank-app
+data:
+  db_host: "jdbc:mysql://bankdb123.spontansolutions.com:3306/bankappdb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"

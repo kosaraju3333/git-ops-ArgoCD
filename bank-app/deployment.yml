@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bank-app-deployment
+  namespace: bank-app
+  labels:
+    app: bank-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bank-app
+  template:
+    metadata:
+      name: bank-app-app
+      labels:
+        app: bank-app
+    spec:
+      containers:
+        - name: bank-app-container
+          image: kosaraju333/bank-application:V1
+          ports:
+            - containerPort: 8080
+
+          livenessProbe:
+            httpGet:
+              path: /login
+              port: 8080
+            initialDelaySeconds: 10  ## Liveness probe executed after 10 or N seconds dealy after apllication set up
+            periodSeconds: 10 ## Liveness probe is executed for every 10 or N seconds
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5 ## Number of Liveness probe failures, container restarts after failureThreshold is 2 or N
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: 8080
+            initialDelaySeconds: 10  ## Readiness probe executed after 10 or N seconds dealy after apllication set up
+            periodSeconds: 10 ## Readiness probe is executed for every 10 or N seconds
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 2 ## Number of Readiness probe failures, container restarts after failureThreshold is 2 or N
+
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bank-app-configmap
+                  key: db_host
+
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: bank-app-secrets
+                  key: db_user
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bank-app-secrets
+                  key: db_password
+
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "500m"
+            limits:
+              memory: "1000Mi"
+              cpu: "1000m"
+        

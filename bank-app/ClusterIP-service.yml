@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bank-app-service
+  namespace: bank-app
+spec:
+  selector:
+    app: bank-app
+  ports:
+    - protocol: TCP
+      # Below Port number is a service port number
+      port: 80
+      # Below targetPort is a Container Port number
+      targetPort: 8080
