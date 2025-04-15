@@ -4,4 +4,4 @@ metadata:
   name: bank-app-configmap
   namespace: bank-app
 data:
-  db_host: "jdbc:mysql://bankdb123.spontansolutions.com:3306/bankappdb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+  db_host: "jdbc:mysql://bank-database-statefulset-service.bank-database.svc.cluster.local:3306/bankappdb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
