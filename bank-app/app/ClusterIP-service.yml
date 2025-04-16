@@ -11,4 +11,4 @@ spec:
       # Below Port number is a service port number
       port: 80
       # Below targetPort is a Container Port number
-      targetPort: 8080
+      targetPort: 5050

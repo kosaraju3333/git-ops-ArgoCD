@@ -20,12 +20,12 @@ spec:
         - name: bank-app-container
           image: kosaraju333/bank-app:20250416-053916
           ports:
-            - containerPort: 8080
+            - containerPort: 5050
 
           livenessProbe:
             httpGet:
               path: /login
-              port: 8080
+              port: 5050
             initialDelaySeconds: 10  ## Liveness probe executed after 10 or N seconds dealy after apllication set up
             periodSeconds: 10 ## Liveness probe is executed for every 10 or N seconds
             timeoutSeconds: 5
@@ -34,7 +34,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /login
-              port: 8080
+              port: 5050
             initialDelaySeconds: 10  ## Readiness probe executed after 10 or N seconds dealy after apllication set up
             periodSeconds: 10 ## Readiness probe is executed for every 10 or N seconds
             timeoutSeconds: 5
