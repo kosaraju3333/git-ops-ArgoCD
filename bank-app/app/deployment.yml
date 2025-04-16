@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: bank-app-container
-          image: kosaraju333/bank-application:V1
+          image: kosaraju333/bank-application:20250416-052645
           ports:
             - containerPort: 8080
 
