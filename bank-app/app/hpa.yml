@@ -4,7 +4,7 @@ metadata:
   name: bank-app-hpa
   namespace: bank-app
 spec:
-  minReplicas: 1
+  minReplicas: 2
   maxReplicas: 10
   metrics:
   - type: Resource
