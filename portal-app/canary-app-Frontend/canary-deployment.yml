@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal-app-deployment-v2
+  namespace: portal-app
+  labels:
+    app: portal-app
+spec:
+  #replicas: 3
+  selector:
+    matchLabels:
+      app: portal-app
+      version: v2
+  template:
+    metadata:
+      name: portal-app-app
+      labels:
+        app: portal-app
+        version: v2
+    spec:
+      containers:
+      - name: portal-app-container
+        image: kosaraju333/portal-app:20250421-114346
+        livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10  ## Liveness probe executed after 10 or N seconds dealy after apllication set up
+            periodSeconds: 10 ## Liveness probe is executed for every 10 or N seconds
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5 ## Number of Liveness probe failures, container restarts after failureThreshold is 2 or N
+        readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10  ## Readiness probe executed after 10 or N seconds dealy after apllication set up
+            periodSeconds: 10 ## Readiness probe is executed for every 10 or N seconds
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 2 ## Number of Readiness probe failures, container restarts after failureThreshold is 2 or N 
+
+        env:
+        - name: HOST
+          valueFrom:
+            configMapKeyRef:
+              name: portal-app-configmap
+              key: host
+
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: portal-app-configmap
+              key: port
+
+        - name: USER
+          valueFrom:
+            secretKeyRef:
+              name: portal-app-secrets
+              key: user
+
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: portal-app-secrets
+              key: password
+
+        - name: DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: portal-app-secrets
+              key: database
+
+        ports:
+        - containerPort: 3000
+
+        resources:
+          limits:
+            cpu: 200m
+          requests:
+            cpu: 200m

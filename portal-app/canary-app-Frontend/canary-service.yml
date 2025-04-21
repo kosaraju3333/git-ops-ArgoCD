@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: portal-app-service-v2
+  namespace: portal-app
+spec:
+  selector:
+    app: portal-app
+    version: v2
+  ports:
+    - protocol: TCP
+      # Below Port number is a service port number
+      port: 80
+      # Below targetPort is a Container Port number
+      targetPort: 3000
