@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: portal-app-rollout
+  namespace: portal-app
+spec:
+  replicas: 3
+  strategy:
+    blueGreen:
+      activeService: portal-app-rollout-active
+      previewService: portal-app-rollout-preview
+      autoPromotionEnabled: false
+  selector:
+    matchLabels:
+      app: portal-app
+  template:
+    metadata:
+      labels:
+        app: portal-app
+    spec:
+      containers:
+        - name: portal-app-container
+          image: kosaraju333/portal-app:20250422-114735
+          ports:
+            - containerPort: 3000
