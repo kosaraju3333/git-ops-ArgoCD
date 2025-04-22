@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: portal-app-rollout
+  namespace: portal-app
+spec:
+  replicas: 6
+  strategy:
+    canary:
+      trafficRouting:
+        alb:
+          servicePort: 80
+          ingress: portal-app-ingress 
+        stableService: portal-app-stable
+        canaryService: portal-app-canary
+      steps:
+        - setWeight: 25
+        - pause: {}
+        # - pause: { duration: 30s }
+        # - setWeight: 50
+        # - pause: { duration: 60s }
+        # - setWeight: 100
+  selector:
+    matchLabels:
+      app: portal-app
+  template:
+    metadata:
+      labels:
+        app: portal-app
+    spec:
+      containers:
+        - name: portal-app-container
+          image: kosaraju3333/portal-app:20250416-092701
+          ports:
+            - containerPort: 3000
