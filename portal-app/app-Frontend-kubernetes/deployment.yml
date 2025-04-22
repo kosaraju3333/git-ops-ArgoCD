@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: portal-app-container
-        image: kosaraju333/portal-app:20250421-134135
+        image: kosaraju333/portal-app:20250422-103136
         livenessProbe:
             httpGet:
               path: /
