@@ -5,30 +5,11 @@ metadata:
   name: portal-ingress-resource
   annotations:
     #kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/load-balancer-name: portal-app-alb
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:828048069567:certificate/043d5d2d-3645-4a14-879b-f36d24c4c339
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}, {"HTTPS":443}]'
     alb.ingress.kubernetes.io/ssl-redirect: '443'
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/actions.portal-app-canary: >
-      {
-        "Type": "forward",
-        "ForwardConfig": {
-          "TargetGroups": [
-            {
-              "ServiceName": "portal-app-stable",
-              "ServicePort": "80",
-              "Weight": 90
-            },
-            {
-              "ServiceName": "portal-app-canary",
-              "ServicePort": "80",
-              "Weight": 10
-            }
-          ]
-        }
-      }
 spec:
   ingressClassName: alb
   rules:
@@ -39,6 +20,6 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: portal-app-canary
+              name: portal-app-service
               port:
-                name: use-annotation
+                number: 80

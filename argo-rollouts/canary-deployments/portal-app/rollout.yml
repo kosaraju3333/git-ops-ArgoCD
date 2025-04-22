@@ -7,19 +7,13 @@ spec:
   replicas: 6
   strategy:
     canary:
-      trafficRouting:
-        alb:
-          servicePort: 80
-          ingress: portal-app-ingress 
-        stableService: portal-app-stable
-        canaryService: portal-app-canary
       steps:
-        - setWeight: 25
-        - pause: {}
+      - setWeight: 25
+      - pause: {}
         # - pause: { duration: 30s }
-        # - setWeight: 50
-        # - pause: { duration: 60s }
-        # - setWeight: 100
+      - setWeight: 50
+      - pause: { duration: 60s }
+      - setWeight: 100
   selector:
     matchLabels:
       app: portal-app
@@ -30,6 +24,7 @@ spec:
     spec:
       containers:
         - name: portal-app-container
-          image: kosaraju3333/portal-app:20250416-092701
+          image: kosaraju333/portal-app:20250422-103136
           ports:
             - containerPort: 3000
+
