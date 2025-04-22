@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: portal-app-container
-          image: kosaraju333/portal-app:20250422-103136
+          image: kosaraju333/portal-app:20250422-114735
           ports:
             - containerPort: 3000
 
