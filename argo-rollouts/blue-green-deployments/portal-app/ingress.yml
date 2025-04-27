@@ -2,10 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   namespace: portal-app
-  name: portal-ingress-resource
+  name: blugreen-portal-ingress-resource
   annotations:
-    #kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/certificate-arn: SSL Certificate ARN
+    alb.ingress.kubernetes.io/load-balancer-name: bluegreen-portal-app-alb
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:828048069567:certificate/043d5d2d-3645-4a14-879b-f36d24c4c339
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}, {"HTTPS":443}]'
     alb.ingress.kubernetes.io/ssl-redirect: '443'
     alb.ingress.kubernetes.io/scheme: internet-facing
