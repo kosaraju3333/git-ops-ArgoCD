@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: portal-app-internal-cert
+  namespace: portal-app
+spec:
+  secretName: portal-app-internal-tls
+  issuerRef:
+    name: selfsigned-issuer  # Reference the self-signed issuer
+  commonName: portal-app-service.portal-app.svc.cluster.local  # Internal service domain
+  dnsNames:
+    - portal-app-service.portal-app.svc.cluster.local  # Internal DNS name for the app
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d before expiration

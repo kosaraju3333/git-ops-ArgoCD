@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal-app-deployment
+  namespace: portal-app
+  labels:
+    app: portal-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: portal-app
+  template:
+    metadata:
+      name: portal-app-app
+      labels:
+        app: portal-app
+    spec:
+      containers:
+      - name: portal-app-container
+        image: kosaraju333/portal-app:20250423-091650
+        livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10  ## Liveness probe executed after 10 or N seconds dealy after apllication set up
+            periodSeconds: 10 ## Liveness probe is executed for every 10 or N seconds
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5 ## Number of Liveness probe failures, container restarts after failureThreshold is 2 or N
+        readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10  ## Readiness probe executed after 10 or N seconds dealy after apllication set up
+            periodSeconds: 10 ## Readiness probe is executed for every 10 or N seconds
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 2 ## Number of Readiness probe failures, container restarts after failureThreshold is 2 or N
+
+        env:
+        - name: HOST
+          valueFrom:
+            configMapKeyRef:
+              name: portal-app-configmap
+              key: host
+
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: portal-app-configmap
+              key: port
+
+        - name: USER
+          valueFrom:
+            secretKeyRef:
+              name: portal-app-secrets
+              key: user
+
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: portal-app-secrets
+              key: password
+
+        - name: DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: portal-app-secrets
+              key: database
+
+        ports:
+        - containerPort: 3000
+
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 443  # Nginx listens on port 443 for SSL termination
+
+        volumeMounts:
+          - name: nginx-config-volume
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+
+          - name: ssl-certificate
+            mountPath: /etc/nginx/ssl  # Path inside the container where SSL cert will be mounted
+            readOnly: true
+
+        resources:
+          limits:
+            cpu: 200m
+          requests:
+            cpu: 200m
+
+      volumes:
+          - name: nginx-config-volume
+            configMap:
+              name: portal-app-configmap
+
+          - name: ssl-certificate
+            secret:
+              secretName: portal-app-internal-tls

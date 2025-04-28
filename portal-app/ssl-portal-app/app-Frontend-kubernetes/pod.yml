@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu
+  namespace: portal-app
+spec:
+  containers:
+    - name: ubuntu
+      image: ubunt
