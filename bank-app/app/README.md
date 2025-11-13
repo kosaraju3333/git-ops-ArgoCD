@@ -11,9 +11,17 @@ eksctl create iamserviceaccount --name bank-app-service-account --region="$REGIO
 
 For Sync:
 ```bash
-Check if syncSecret is enabled or not but running below command:
+Check if syncSecret is enabled or not, running below command to verify:
 helm get values csi-secrets-store -n kube-system
+if it is enables you will output like below
+```bash
+USER-SUPPLIED VALUES:
+syncSecret:
+  enabled: true
+```
 
+if not enables pls upgrade youe CSI-secrete-store-driver. pls use below commnads 
+```bash
 helm upgrade  -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver --set syncSecret.enabled=true --reuse-values
 
 restart:
