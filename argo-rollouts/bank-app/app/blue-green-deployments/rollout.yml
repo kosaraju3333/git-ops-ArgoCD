@@ -24,7 +24,7 @@ spec:
 
       containers:
         - name: bank-app-container
-          image: kosaraju333/bank-app:20251117-103215
+          image: kosaraju333/bank-app:20251117-122242
           ports:
             - containerPort: 5050
 
